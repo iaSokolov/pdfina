@@ -22,6 +22,9 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
+	//veraPDF
+	implementation("org.verapdf:validation-model:1.22.2")
+
 	// UI
 	implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
 

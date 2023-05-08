@@ -13,20 +13,42 @@
 
 <body id="page-top">
 
-<input type="file" id="upload-file">
+<div class="container" th:if="${message ne null}">
+    <form>
+        <div class="form-group">
+            <label for="formGroupExampleInput">
+                Example label
+            </label>
+            <input th:value="${message}"
+                   type="text"
+                   class="form-control"
+                   id="formGroupExampleInput"
+                   placeholder="Example input">
+        </div>
+    </form>
+</div>
 
-<button class="btn btn-primary"
-        id="upload-file"
-        type="button"
-        onclick="uploadFile()">
-    Загрузить
-</button>
+<div class="container" th:if="${message eq null}">
+    <form method="post" th:action="@{/upload}" enctype="multipart/form-data">
+        <div class="mb-3">
+            <input class="form-control-file" type="file" name="file"/>
+        </div>
+        <div>
+            <button class="btn btn-primary d-block w-100"
+                    type="submit"
+                    id="btnFetch">
+                Send
+            </button>
+        </div>
+    </form>
+</div>
 
-<script th:src="@{assets/js/uploader.js}"></script>
+<script th:src="@{assets/js/jq.min.js}"></script>
 <script th:src="@{assets/bootstrap/js/bootstrap.min.js}"></script>
 <script th:src="@{assets/js/chart.min.js}"></script>
 <script th:src="@{assets/js/bs-init.js}"></script>
 <script th:src="@{assets/js/theme.js}"></script>
+<script th:src="@{assets/js/uploader.js}"></script>
 </body>
 
 </html>
