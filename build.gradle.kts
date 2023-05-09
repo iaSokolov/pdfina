@@ -25,6 +25,12 @@ dependencies {
 	//veraPDF
 	implementation("org.verapdf:validation-model:1.22.2")
 
+	//JAXB-API
+	implementation("jakarta.xml.bind:jakarta.xml.bind-api:2.3.3")
+
+	//JAXB Implementation
+	implementation("org.glassfish.jaxb:jaxb-runtime:2.3.6")
+
 	// UI
 	implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
 

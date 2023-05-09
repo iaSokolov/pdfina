@@ -1,5 +1,5 @@
 package ru.iasokolov.pdfina.dto
 
-data class CheckParam(
+data class CheckParamDto(
     val format: String
 )

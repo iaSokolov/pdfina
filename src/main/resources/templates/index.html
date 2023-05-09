@@ -13,16 +13,17 @@
 
 <body id="page-top">
 
-<div class="container" th:if="${status ne null}">
+<div class="container" th:if="${result ne null}">
     <form>
         <div class="form-group mb-3">
             <label for="statusInput">
                 Статус
             </label>
-            <input th:value="${status}"
+            <input th:value="${result.status}"
                    type="text"
                    class="form-control"
-                   id="statusInput">
+                   id="statusInput"
+                   disabled>
         </div>
 
         <div class="form-group mb-3">
@@ -30,16 +31,70 @@
                 Сообщение
             </label>
 
-            <input th:value="${message}"
+            <input th:value="${result.message}"
                    type="text"
                    class="form-control"
-                   id="messageInput">
+                   id="messageInput"
+                   disabled>
         </div>
+
+        <div class="form-group mb-3">
+            <label for="profileName">
+                Профиль проверки
+            </label>
+
+            <input th:value="${result.profile.name}"
+                   type="text"
+                   class="form-control"
+                   id="profileName"
+                   disabled>
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="profileDescription">
+                Описание профилья проверки
+            </label>
+
+            <input th:value="${result.profile.description}"
+                   type="text"
+                   class="form-control"
+                   id="profileDescription"
+                   disabled>
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="failedRules">
+                Ошибки
+            </label>
+
+            <table id="failedRules" class="table table-striped table-bordered">
+                <thead>
+                <tr>
+                    <th>Спецификация</th>
+                    <th>Пункт</th>
+                    <th>Описание</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="rule:${result.failedRules}">
+                    <td><span th:text="${rule.specification}"></span></td>
+                    <td><span th:text="${rule.clause}"></span></td>
+                    <td><span th:text="${rule.description}"></span></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <a href="/check">
+            <button class="btn btn-primary d-block w-100">
+                Проверить другой документ
+            </button>
+        </a>
     </form>
 </div>
 
 <div class="container"
-     th:if="${message eq null}">
+     th:if="${result eq null}">
 
     <form method="post" th:action="@{/upload}" enctype="multipart/form-data" th:object="${checkParam}">
         <div class="mb-3">

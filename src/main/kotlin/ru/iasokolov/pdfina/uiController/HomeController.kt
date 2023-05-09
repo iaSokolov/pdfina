@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
-import ru.iasokolov.pdfina.dto.CheckParam
+import ru.iasokolov.pdfina.dto.CheckParamDto
 import ru.iasokolov.pdfina.service.CheckService
 
 @Controller
@@ -21,10 +21,10 @@ class HomeController(
         var logger: Logger = LoggerFactory.getLogger(HomeController::class.java)
     }
 
-    @GetMapping(path = ["/", "/home", "/index"])
+    @GetMapping(path = ["/", "/home", "/index", "/check"])
     fun index(model: Model): String {
         val formatList = listOf<String>("1a", "2a", "1b", "2b", "ux")
-        val checkParam = CheckParam(
+        val checkParam = CheckParamDto(
             format = "1a"
         )
 
@@ -36,15 +36,11 @@ class HomeController(
     @PostMapping("/upload")
     fun uploadFile(
         @RequestParam("file") file: MultipartFile,
-        @ModelAttribute param: CheckParam,
+        @ModelAttribute param: CheckParamDto,
         attributes: RedirectAttributes
     ): String? {
-
         val result = checkService.check(param, file.inputStream)
-
-        attributes.addFlashAttribute("status", result.status)
-        attributes.addFlashAttribute("message", result.message)
-
+        attributes.addFlashAttribute("result", result)
         return "redirect:/"
     }
 }
