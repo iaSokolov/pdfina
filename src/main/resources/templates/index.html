@@ -9,117 +9,143 @@
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
     <link rel="stylesheet" th:href="@{/assets/fonts/fontawesome-all.min.css}">
+    <link rel="stylesheet" th:href="@{/assets/styles/styles.css}">
 </head>
 
-<body id="page-top">
+<body>
+<div class="container py-3">
+    <header>
+        <div class="d-flex flex-column flex-md-row align-items-center pb-3 mb-4 border-bottom">
+            <a href="/" class="d-flex align-items-center text-dark text-decoration-none">
+                <span class="fs-4">ПДФ Валидатор</span>
+            </a>
 
-<div class="container" th:if="${result ne null}">
-    <form>
-        <div class="form-group mb-3">
-            <label for="statusInput">
-                Статус
-            </label>
-            <input th:value="${result.status}"
-                   type="text"
-                   class="form-control"
-                   id="statusInput"
-                   disabled>
+            <nav class="d-inline-flex mt-2 mt-md-0 ms-md-auto">
+                <a class="me-3 py-2 text-dark text-decoration-none" href="#">Документация</a>
+                <a class="me-3 py-2 text-dark text-decoration-none" href="#">Контакты</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div th:if="${result ne null}">
+            <form>
+                <div class="form-group mb-3">
+                    <label for="statusInput">
+                        Статус
+                    </label>
+                    <input th:value="${result.status}"
+                           type="text"
+                           class="form-control"
+                           id="statusInput"
+                           disabled>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="messageInput">
+                        Сообщение
+                    </label>
+
+                    <input th:value="${result.message}"
+                           type="text"
+                           class="form-control"
+                           id="messageInput"
+                           disabled>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="profileName">
+                        Профиль проверки
+                    </label>
+
+                    <input th:value="${result.profile.name}"
+                           type="text"
+                           class="form-control"
+                           id="profileName"
+                           disabled>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="profileDescription">
+                        Описание профилья проверки
+                    </label>
+
+                    <input th:value="${result.profile.description}"
+                           type="text"
+                           class="form-control"
+                           id="profileDescription"
+                           disabled>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="failedRules">
+                        Ошибки
+                    </label>
+
+                    <table id="failedRules" class="table table-striped table-bordered">
+                        <thead>
+                        <tr>
+                            <th>Спецификация</th>
+                            <th>Пункт</th>
+                            <th>Описание</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="rule:${result.failedRules}">
+                            <td><span th:text="${rule.specification}"></span></td>
+                            <td><span th:text="${rule.clause}"></span></td>
+                            <td><span th:text="${rule.description}"></span></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <a href="/check">
+                    <button class="btn btn-primary d-block w-100">
+                        Проверить другой документ
+                    </button>
+                </a>
+            </form>
         </div>
 
-        <div class="form-group mb-3">
-            <label for="messageInput">
-                Сообщение
-            </label>
+        <div th:if="${result eq null}">
+            <div class="callout-info">
+                <strong>Важная информация:</strong>
+                мы не сохраняем документы, которые были присланы для валидации, не сохраняем результаты проверки, не отслеживаем никакие пользовательские данные.
+            </div>
 
-            <input th:value="${result.message}"
-                   type="text"
-                   class="form-control"
-                   id="messageInput"
-                   disabled>
+            <form method="post" th:action="@{/upload}" enctype="multipart/form-data" th:object="${checkParam}">
+                <div class="mb-3">
+                    <input class="form-control"
+                           type="file"
+                           name="file"/>
+                </div>
+
+                <label for="profile" class="form-label">Формат документа</label>
+                <div class="input-group mb-3">
+                    <select class="form-select" id="profile" th:field="*{format}">
+                        <option th:each="format : ${formatList}"
+                                th:value="${format}"
+                                th:text="${format}"></option>
+                    </select>
+                </div>
+
+                <div>
+                    <button class="btn btn-primary "
+                            type="submit"
+                            id="btnFetch">
+                        Отправить
+                    </button>
+                </div>
+            </form>
         </div>
+    </main>
 
-        <div class="form-group mb-3">
-            <label for="profileName">
-                Профиль проверки
-            </label>
-
-            <input th:value="${result.profile.name}"
-                   type="text"
-                   class="form-control"
-                   id="profileName"
-                   disabled>
+    <footer class="pt-4 my-md-5 pt-md-5 border-top">
+        <div class="row">
+            <small class="d-block text-muted">&copy; 2023</small>
         </div>
-
-        <div class="form-group mb-3">
-            <label for="profileDescription">
-                Описание профилья проверки
-            </label>
-
-            <input th:value="${result.profile.description}"
-                   type="text"
-                   class="form-control"
-                   id="profileDescription"
-                   disabled>
-        </div>
-
-        <div class="form-group mb-3">
-            <label for="failedRules">
-                Ошибки
-            </label>
-
-            <table id="failedRules" class="table table-striped table-bordered">
-                <thead>
-                <tr>
-                    <th>Спецификация</th>
-                    <th>Пункт</th>
-                    <th>Описание</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="rule:${result.failedRules}">
-                    <td><span th:text="${rule.specification}"></span></td>
-                    <td><span th:text="${rule.clause}"></span></td>
-                    <td><span th:text="${rule.description}"></span></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <a href="/check">
-            <button class="btn btn-primary d-block w-100">
-                Проверить другой документ
-            </button>
-        </a>
-    </form>
-</div>
-
-<div class="container"
-     th:if="${result eq null}">
-
-    <form method="post" th:action="@{/upload}" enctype="multipart/form-data" th:object="${checkParam}">
-        <div class="mb-3">
-            <input class="form-control-file"
-                   type="file"
-                   name="file"/>
-        </div>
-
-        <label for="profile" class="form-label">Формат документа</label>
-        <div class="input-group mb-3">
-            <select class="form-select" id="profile" th:field="*{format}">
-                <option th:each="format : ${formatList}"
-                        th:value="${format}"
-                        th:text="${format}"></option>
-            </select>
-        </div>
-
-        <div>
-            <button class="btn btn-primary d-block w-100"
-                    type="submit"
-                    id="btnFetch">
-                Отправить
-            </button>
-        </div>
-    </form>
+    </footer>
 </div>
 
 <script th:src="@{assets/js/jq.min.js}"></script>
@@ -128,6 +154,7 @@
 <script th:src="@{assets/js/bs-init.js}"></script>
 <script th:src="@{assets/js/theme.js}"></script>
 <script th:src="@{assets/js/uploader.js}"></script>
+
 </body>
 
 </html>
