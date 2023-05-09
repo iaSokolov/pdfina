@@ -13,31 +13,55 @@
 
 <body id="page-top">
 
-<div class="container" th:if="${message ne null}">
+<div class="container" th:if="${status ne null}">
     <form>
-        <div class="form-group">
-            <label for="formGroupExampleInput">
-                Example label
+        <div class="form-group mb-3">
+            <label for="statusInput">
+                Статус
             </label>
+            <input th:value="${status}"
+                   type="text"
+                   class="form-control"
+                   id="statusInput">
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="messageInput">
+                Сообщение
+            </label>
+
             <input th:value="${message}"
                    type="text"
                    class="form-control"
-                   id="formGroupExampleInput"
-                   placeholder="Example input">
+                   id="messageInput">
         </div>
     </form>
 </div>
 
-<div class="container" th:if="${message eq null}">
-    <form method="post" th:action="@{/upload}" enctype="multipart/form-data">
+<div class="container"
+     th:if="${message eq null}">
+
+    <form method="post" th:action="@{/upload}" enctype="multipart/form-data" th:object="${checkParam}">
         <div class="mb-3">
-            <input class="form-control-file" type="file" name="file"/>
+            <input class="form-control-file"
+                   type="file"
+                   name="file"/>
         </div>
+
+        <label for="profile" class="form-label">Формат документа</label>
+        <div class="input-group mb-3">
+            <select class="form-select" id="profile" th:field="*{format}">
+                <option th:each="format : ${formatList}"
+                        th:value="${format}"
+                        th:text="${format}"></option>
+            </select>
+        </div>
+
         <div>
             <button class="btn btn-primary d-block w-100"
                     type="submit"
                     id="btnFetch">
-                Send
+                Отправить
             </button>
         </div>
     </form>
